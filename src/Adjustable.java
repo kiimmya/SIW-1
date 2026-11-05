@@ -1,0 +1,3 @@
+interface Adjustable {
+    void adjustPortion();
+}

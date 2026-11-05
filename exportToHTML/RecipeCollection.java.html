@@ -1,0 +1,293 @@
+<html>
+<head>
+<title>RecipeCollection.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #7a7e85;}
+.s4 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+RecipeCollection.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.*;</span>
+
+<span class="s0">public class </span><span class="s1">RecipeCollection </span><span class="s2">{</span>
+
+    <span class="s0">private </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">recipes</span><span class="s2">;</span>
+
+    <span class="s0">private </span><span class="s1">Map</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">, </span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">recipeIndex</span><span class="s2">;</span>
+
+    <span class="s0">private </span><span class="s1">Map</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">, </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt;&gt; </span><span class="s1">categoryIndex</span><span class="s2">;</span>
+
+    <span class="s0">private </span><span class="s1">Set</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt; </span><span class="s1">ingredients</span><span class="s2">;</span>
+
+    <span class="s0">private </span><span class="s1">Queue</span><span class="s2">&lt;</span><span class="s1">RecipeRequest</span><span class="s2">&gt; </span><span class="s1">requestQueue</span><span class="s2">;</span>
+
+    <span class="s0">private <a href="RecipeBook.java.html">RecipeBook</a> </span><span class="s1">recipeBook</span><span class="s2">;</span>
+
+    <span class="s0">private <a href="RecipeHelper.java.html">RecipeHelper</a> </span><span class="s1">helper</span><span class="s2">;</span>
+
+
+    <span class="s0">public </span><span class="s1">RecipeCollection</span><span class="s2">() {</span>
+        <span class="s1">recipes </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">recipeIndex </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HashMap</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">categoryIndex </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HashMap</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">ingredients </span><span class="s2">= </span><span class="s0">new </span><span class="s1">HashSet</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">requestQueue </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayDeque</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">recipeBook </span><span class="s2">= </span><span class="s0">new <a href="RecipeBook.java.html">RecipeBook</a></span><span class="s2">();</span>
+        <span class="s1">helper </span><span class="s2">= </span><span class="s0">new <a href="RecipeHelper.java.html">RecipeHelper</a></span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// ADD</span>
+    <span class="s0">public synchronized boolean </span><span class="s1">addRecipe</span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">recipe </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Recipe cannot be null.&quot;</span><span class="s2">);</span>
+            <span class="s0">return false</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">containsKey</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">())) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Recipe with this ID already exists.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s1">recipes</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">);</span>
+        <span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">put</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">(), </span><span class="s1">recipe</span><span class="s2">);</span>
+        <span class="s1">categoryIndex</span><span class="s2">.</span><span class="s1">computeIfAbsent</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getCategory</span><span class="s2">(), </span><span class="s1">k -&gt; </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;()).</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">);</span>
+        <span class="s1">ingredients</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getMainIngredient</span><span class="s2">());</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s4">&quot; added successfully.&quot;</span><span class="s2">);</span>
+
+        <span class="s0">return true</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// FIND</span>
+    <span class="s0">public synchronized <a href="Recipe.java.html">Recipe</a> </span><span class="s1">findRecipeById</span><span class="s2">(</span><span class="s0">int </span><span class="s1">id</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">containsKey</span><span class="s2">(</span><span class="s1">id</span><span class="s2">)) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Recipe not found.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">id</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// SEARCH</span>
+    <span class="s0">public synchronized </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">searchByName</span><span class="s2">(</span><span class="s1">String name</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">result </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">name </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">name</span><span class="s2">.</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s0">return </span><span class="s1">result</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">for </span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe </span><span class="s2">: </span><span class="s1">recipes</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">().</span><span class="s1">toLowerCase</span><span class="s2">().</span><span class="s1">contains</span><span class="s2">(</span><span class="s1">name</span><span class="s2">.</span><span class="s1">toLowerCase</span><span class="s2">())) {</span>
+                <span class="s1">result</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">);</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return </span><span class="s1">result</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// FILTER</span>
+    <span class="s0">public synchronized </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">filterByCategory</span><span class="s2">(</span><span class="s1">String category</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">result </span><span class="s2">= </span><span class="s1">categoryIndex</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">category</span><span class="s2">);</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">result </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">return new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;();</span>
+        <span class="s2">}</span>
+        <span class="s0">return new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;(</span><span class="s1">result</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// UPDATE</span>
+    <span class="s0">public synchronized boolean </span><span class="s1">updateRecipe</span><span class="s2">(</span><span class="s0">int </span><span class="s1">id</span><span class="s2">, <a href="Recipe.java.html">Recipe</a> </span><span class="s1">updatedRecipe</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">updatedRecipe </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Updated recipe cannot be null&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <a href="Recipe.java.html">Recipe</a> <span class="s1">oldRecipe </span><span class="s2">= </span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">id</span><span class="s2">);</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">oldRecipe </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Recipe not found.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">updatedRecipe</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() != </span><span class="s1">id</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Recipe ID cannot be changed&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">int </span><span class="s1">index </span><span class="s2">= </span><span class="s1">recipes</span><span class="s2">.</span><span class="s1">indexOf</span><span class="s2">(</span><span class="s1">oldRecipe</span><span class="s2">);</span>
+        <span class="s1">recipes</span><span class="s2">.</span><span class="s1">set</span><span class="s2">(</span><span class="s1">index</span><span class="s2">, </span><span class="s1">updatedRecipe</span><span class="s2">);</span>
+        <span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">put</span><span class="s2">(</span><span class="s1">id</span><span class="s2">, </span><span class="s1">updatedRecipe</span><span class="s2">);</span>
+        <span class="s1">rebuildIndexes</span><span class="s2">();</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Recipe updated successfully.&quot;</span><span class="s2">);</span>
+
+        <span class="s0">return true</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// DELETE</span>
+    <span class="s0">public synchronized boolean </span><span class="s1">deleteRecipe</span><span class="s2">(</span><span class="s0">int </span><span class="s1">id</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">containsKey</span><span class="s2">(</span><span class="s1">id</span><span class="s2">)) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Recipe not found.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <a href="Recipe.java.html">Recipe</a> <span class="s1">recipe </span><span class="s2">= </span><span class="s1">recipeIndex</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">id</span><span class="s2">);</span>
+        <span class="s1">recipes</span><span class="s2">.</span><span class="s1">remove</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">);</span>
+        <span class="s1">rebuildIndexes</span><span class="s2">();</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s4">&quot; deleted successfully.&quot;</span><span class="s2">);</span>
+        <span class="s0">return true</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// SYNCHRONIZE ALL INDEXES</span>
+    <span class="s0">private synchronized void </span><span class="s1">rebuildIndexes</span><span class="s2">() {</span>
+        <span class="s1">categoryIndex</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s1">ingredients</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+
+        <span class="s0">for </span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe </span><span class="s2">: </span><span class="s1">recipes</span><span class="s2">) {</span>
+            <span class="s1">String category </span><span class="s2">= </span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getCategory</span><span class="s2">().</span><span class="s1">toLowerCase</span><span class="s2">();</span>
+            <span class="s1">categoryIndex</span><span class="s2">.</span><span class="s1">computeIfAbsent</span><span class="s2">(</span><span class="s1">category</span><span class="s2">, </span><span class="s1">k -&gt; </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;()).</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">);</span>
+            <span class="s1">ingredients</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getMainIngredient</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// DISPLAY ALL RECIPES</span>
+    <span class="s0">public synchronized void </span><span class="s1">showRecipes</span><span class="s2">() {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">recipes</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;No recipes available.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">for </span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe </span><span class="s2">: </span><span class="s1">recipes</span><span class="s2">) {</span>
+            <span class="s1">recipe</span><span class="s2">.</span><span class="s1">printInfo</span><span class="s2">();</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;--------------------&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// DISPLAY INGREDIENTS</span>
+    <span class="s0">public void </span><span class="s1">showIngredients</span><span class="s2">() {</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Unique ingredients:&quot;</span><span class="s2">);</span>
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">String ingredient </span><span class="s2">: </span><span class="s1">ingredients</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">ingredient</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// SORTING</span>
+    <span class="s0">public synchronized void </span><span class="s1">sortRecipes</span><span class="s2">(</span><span class="s1">Comparator</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">comparator</span><span class="s2">) {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">sorted </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;(</span><span class="s1">recipes</span><span class="s2">);</span>
+        <span class="s1">sorted</span><span class="s2">.</span><span class="s1">sort</span><span class="s2">(</span><span class="s1">comparator</span><span class="s2">);</span>
+
+        <span class="s0">for </span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe </span><span class="s2">: </span><span class="s1">sorted</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot;. &quot; </span><span class="s2">+ </span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">() + </span><span class="s4">&quot; - &quot; </span><span class="s2">+ </span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getCookingTime</span><span class="s2">() + </span><span class="s4">&quot; minutes&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// NATURAL ORDERING: Comparable</span>
+    <span class="s0">public synchronized void </span><span class="s1">sortById</span><span class="s2">() {</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">sorted </span><span class="s2">= </span><span class="s0">new </span><span class="s1">ArrayList</span><span class="s2">&lt;&gt;(</span><span class="s1">recipes</span><span class="s2">);</span>
+        <span class="s1">Collections</span><span class="s2">.</span><span class="s1">sort</span><span class="s2">(</span><span class="s1">sorted</span><span class="s2">);</span>
+
+        <span class="s0">for </span><span class="s2">(<a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe </span><span class="s2">: </span><span class="s1">sorted</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getId</span><span class="s2">() + </span><span class="s4">&quot;. &quot; </span><span class="s2">+ </span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">getName</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// ANALYTICS</span>
+    <span class="s0">public void </span><span class="s1">printRecipeCount</span><span class="s2">() {</span>
+        <span class="s1">helper</span><span class="s2">.</span><span class="s1">showCount</span><span class="s2">(</span><span class="s1">recipes</span><span class="s2">.</span><span class="s1">size</span><span class="s2">());</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Unique ingredients: &quot; </span><span class="s2">+ </span><span class="s1">ingredients</span><span class="s2">.</span><span class="s1">size</span><span class="s2">());</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Recipes by category:&quot;</span><span class="s2">);</span>
+
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Map</span><span class="s2">.</span><span class="s1">Entry</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">, </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt;&gt; </span><span class="s1">entry </span><span class="s2">: </span><span class="s1">categoryIndex</span><span class="s2">.</span><span class="s1">entrySet</span><span class="s2">()) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s1">entry</span><span class="s2">.</span><span class="s1">getKey</span><span class="s2">() + </span><span class="s4">&quot;: &quot; </span><span class="s2">+ </span><span class="s1">entry</span><span class="s2">.</span><span class="s1">getValue</span><span class="s2">().</span><span class="s1">size</span><span class="s2">());</span>
+        <span class="s2">}</span>
+        <span class="s1">helper</span><span class="s2">.</span><span class="s1">showFastestRecipe</span><span class="s2">(</span><span class="s1">recipes</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// QUEUE: Submit request</span>
+    <span class="s0">public synchronized void </span><span class="s1">submitRequest</span><span class="s2">(<a href="RecipeRequest.java.html">RecipeRequest</a> </span><span class="s1">request</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">request </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Request cannot be null&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s1">requestQueue</span><span class="s2">.</span><span class="s1">offer</span><span class="s2">(</span><span class="s1">request</span><span class="s2">);</span>
+
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Request submitted to the queue.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// QUEUE: Process request (ADMIN)</span>
+    <span class="s0">public synchronized void </span><span class="s1">processNextRequest</span><span class="s2">(<a href="User.java.html">User</a> </span><span class="s1">administrator</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">administrator </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">administrator</span><span class="s2">.</span><span class="s1">getRole</span><span class="s2">() != <a href="UserRole.java.html">UserRole</a>.</span><span class="s1">ADMIN</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Only ADMIN can process requests.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <a href="RecipeRequest.java.html">RecipeRequest</a> <span class="s1">request </span><span class="s2">= </span><span class="s1">requestQueue</span><span class="s2">.</span><span class="s1">peek</span><span class="s2">();</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">request </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Request queue is empty.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">try </span><span class="s2">{</span>
+            <span class="s0">switch </span><span class="s2">(</span><span class="s1">request</span><span class="s2">.</span><span class="s1">getType</span><span class="s2">()) {</span>
+
+                <span class="s0">case </span><span class="s1">ADD</span><span class="s2">:</span>
+                    <span class="s1">addRecipe</span><span class="s2">(</span><span class="s1">request</span><span class="s2">.</span><span class="s1">getRecipe</span><span class="s2">());</span>
+                    <span class="s0">break</span><span class="s2">;</span>
+
+                <span class="s0">case </span><span class="s1">DELETE</span><span class="s2">:</span>
+                    <span class="s1">deleteRecipe</span><span class="s2">(</span><span class="s1">request</span><span class="s2">.</span><span class="s1">getRecipeId</span><span class="s2">());</span>
+                    <span class="s0">break</span><span class="s2">;</span>
+
+                <span class="s0">case </span><span class="s1">UPDATE</span><span class="s2">:</span>
+                    <span class="s1">updateRecipe</span><span class="s2">(</span><span class="s1">request</span><span class="s2">.</span><span class="s1">getRecipeId</span><span class="s2">(), </span><span class="s1">request</span><span class="s2">.</span><span class="s1">getRecipe</span><span class="s2">());</span>
+                    <span class="s0">break</span><span class="s2">;</span>
+            <span class="s2">}</span>
+            <span class="s1">requestQueue</span><span class="s2">.</span><span class="s1">poll</span><span class="s2">();</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Request processed successfully.&quot;</span><span class="s2">);</span>
+
+        <span class="s2">} </span><span class="s0">catch </span><span class="s2">(</span><span class="s1">IllegalArgumentException </span><span class="s2">| </span><span class="s1">IllegalStateException e</span><span class="s2">) {</span>
+            <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Request failed: &quot; </span><span class="s2">+ </span><span class="s1">e</span><span class="s2">.</span><span class="s1">getMessage</span><span class="s2">());</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public synchronized int </span><span class="s1">getPendingRequestsCount</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">requestQueue</span><span class="s2">.</span><span class="s1">size</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">showRecipeBook</span><span class="s2">() {</span>
+        <span class="s1">recipeBook</span><span class="s2">.</span><span class="s1">showBookInfo</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+
+<span class="s3">// Getters for collection information</span>
+    <span class="s0">public </span><span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">getRecipes</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">Collections</span><span class="s2">.</span><span class="s1">unmodifiableList</span><span class="s2">(</span><span class="s1">recipes</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">Map</span><span class="s2">&lt;</span><span class="s1">Integer</span><span class="s2">, </span><span class="s1">Recipe</span><span class="s2">&gt; </span><span class="s1">getRecipeIndex</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">Collections</span><span class="s2">.</span><span class="s1">unmodifiableMap</span><span class="s2">(</span><span class="s1">recipeIndex</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">Set</span><span class="s2">&lt;</span><span class="s1">String</span><span class="s2">&gt; </span><span class="s1">getIngredients</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">Collections</span><span class="s2">.</span><span class="s1">unmodifiableSet</span><span class="s2">(</span><span class="s1">ingredients</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

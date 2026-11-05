@@ -1,0 +1,146 @@
+<html>
+<head>
+<title>Recipe.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Recipe.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Objects</span><span class="s2">;</span>
+
+<span class="s0">abstract class </span><span class="s1">Recipe </span><span class="s0">implements <a href="Serveable.java.html">Serveable</a></span><span class="s2">, <a href="Adjustable.java.html">Adjustable</a>, </span><span class="s1">Comparable</span><span class="s2">&lt;</span><span class="s1">Recipe</span><span class="s2">&gt; {</span>
+
+    <span class="s0">private int </span><span class="s1">id</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String name</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">cookingTime</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">portions</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">String mainIngredient</span><span class="s2">;</span>
+    <span class="s0">private boolean </span><span class="s1">vegetarian</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">Recipe</span><span class="s2">(</span><span class="s0">int </span><span class="s1">id</span><span class="s2">, </span><span class="s1">String name</span><span class="s2">, </span><span class="s0">int </span><span class="s1">cookingTime</span><span class="s2">, </span><span class="s0">int </span><span class="s1">portions</span><span class="s2">, </span><span class="s1">String mainIngredient</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">vegetarian</span><span class="s2">) {</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">id </span><span class="s2">&lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;ID must be positive&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s1">setName</span><span class="s2">(</span><span class="s1">name</span><span class="s2">);</span>
+        <span class="s1">setCookingTime</span><span class="s2">(</span><span class="s1">cookingTime</span><span class="s2">);</span>
+        <span class="s1">setPortions</span><span class="s2">(</span><span class="s1">portions</span><span class="s2">);</span>
+        <span class="s1">setMainIngredient</span><span class="s2">(</span><span class="s1">mainIngredient</span><span class="s2">);</span>
+
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">id </span><span class="s2">= </span><span class="s1">id</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">vegetarian </span><span class="s2">= </span><span class="s1">vegetarian</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getId</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">id</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">String getName</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">name</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getCookingTime</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">cookingTime</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getPortions</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">portions</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">String getMainIngredient</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">mainIngredient</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public boolean </span><span class="s1">isVegetarian</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">vegetarian</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setName</span><span class="s2">(</span><span class="s1">String name</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">name </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">name</span><span class="s2">.</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Name cannot be empty&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">name </span><span class="s2">= </span><span class="s1">name</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setCookingTime</span><span class="s2">(</span><span class="s0">int </span><span class="s1">cookingTime</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">cookingTime </span><span class="s2">&lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Cooking time must be positive&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">cookingTime </span><span class="s2">= </span><span class="s1">cookingTime</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setPortions</span><span class="s2">(</span><span class="s0">int </span><span class="s1">portions</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">portions </span><span class="s2">&lt;= </span><span class="s3">0</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Portions must be positive&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">portions </span><span class="s2">= </span><span class="s1">portions</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setMainIngredient</span><span class="s2">(</span><span class="s1">String mainIngredient</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">mainIngredient </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">mainIngredient</span><span class="s2">.</span><span class="s1">trim</span><span class="s2">().</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s4">&quot;Ingredient cannot be empty&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">mainIngredient </span><span class="s2">= </span><span class="s1">mainIngredient</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+
+    <span class="s0">public void </span><span class="s1">setVegetarian</span><span class="s2">(</span><span class="s0">boolean </span><span class="s1">vegetarian</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">vegetarian </span><span class="s2">= </span><span class="s1">vegetarian</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public abstract </span><span class="s1">String getCategory</span><span class="s2">();</span>
+
+    <span class="s0">public void </span><span class="s1">category</span><span class="s2">() {</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Category: &quot; </span><span class="s2">+ </span><span class="s1">getCategory</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public abstract void </span><span class="s1">prepare</span><span class="s2">();</span>
+
+
+    <span class="s0">public void </span><span class="s1">printInfo</span><span class="s2">() {</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;ID: &quot; </span><span class="s2">+ </span><span class="s1">id</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Recipe: &quot; </span><span class="s2">+ </span><span class="s1">name</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Cooking time: &quot; </span><span class="s2">+ </span><span class="s1">cookingTime </span><span class="s2">+ </span><span class="s4">&quot; minutes&quot;</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Portions: &quot; </span><span class="s2">+ </span><span class="s1">portions</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Main ingredient: &quot; </span><span class="s2">+ </span><span class="s1">mainIngredient</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Vegetarian: &quot; </span><span class="s2">+ </span><span class="s1">vegetarian</span><span class="s2">);</span>
+        <span class="s1">System</span><span class="s2">.</span><span class="s1">out</span><span class="s2">.</span><span class="s1">println</span><span class="s2">(</span><span class="s4">&quot;Category: &quot; </span><span class="s2">+ </span><span class="s1">getCategory</span><span class="s2">());</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public int </span><span class="s1">compareTo</span><span class="s2">(</span><span class="s1">Recipe other</span><span class="s2">) {</span>
+        <span class="s0">return </span><span class="s1">Integer</span><span class="s2">.</span><span class="s1">compare</span><span class="s2">(</span><span class="s0">this</span><span class="s2">.</span><span class="s1">id</span><span class="s2">, </span><span class="s1">other</span><span class="s2">.</span><span class="s1">id</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">equals</span><span class="s2">(</span><span class="s1">Object obj</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s0">this </span><span class="s2">== </span><span class="s1">obj</span><span class="s2">)</span>
+            <span class="s0">return true</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(!(</span><span class="s1">obj </span><span class="s0">instanceof </span><span class="s1">Recipe</span><span class="s2">))</span>
+            <span class="s0">return false</span><span class="s2">;</span>
+        <span class="s1">Recipe recipe </span><span class="s2">= (</span><span class="s1">Recipe</span><span class="s2">) </span><span class="s1">obj</span><span class="s2">;</span>
+        <span class="s0">return </span><span class="s1">id </span><span class="s2">== </span><span class="s1">recipe</span><span class="s2">.</span><span class="s1">id</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public int </span><span class="s1">hashCode</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">Objects</span><span class="s2">.</span><span class="s1">hash</span><span class="s2">(</span><span class="s1">id</span><span class="s2">);</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>RecipeRequest.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+RecipeRequest.java</font>
+</center></td></tr></table>
+<pre><span class="s0">public class </span><span class="s1">RecipeRequest </span><span class="s2">{</span>
+
+    <span class="s0">public enum </span><span class="s1">RequestType </span><span class="s2">{</span>
+        <span class="s1">ADD</span><span class="s2">, </span><span class="s1">UPDATE</span><span class="s2">, </span><span class="s1">DELETE</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">RequestType type</span><span class="s2">;</span>
+    <span class="s0">private int </span><span class="s1">recipeId</span><span class="s2">;</span>
+    <span class="s0">private <a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe</span><span class="s2">;</span>
+    <span class="s0">private <a href="User.java.html">User</a> </span><span class="s1">requester</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">RecipeRequest</span><span class="s2">(</span><span class="s1">RequestType type</span><span class="s2">, </span><span class="s0">int </span><span class="s1">recipeId</span><span class="s2">, <a href="Recipe.java.html">Recipe</a> </span><span class="s1">recipe</span><span class="s2">, <a href="User.java.html">User</a> </span><span class="s1">requester</span><span class="s2">) {</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">requester </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s3">&quot;Requester cannot be null.&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">((</span><span class="s1">type </span><span class="s2">== </span><span class="s1">RequestType</span><span class="s2">.</span><span class="s1">ADD </span><span class="s2">|| </span><span class="s1">type </span><span class="s2">== </span><span class="s1">RequestType</span><span class="s2">.</span><span class="s1">UPDATE</span><span class="s2">)</span>
+                <span class="s2">&amp;&amp; </span><span class="s1">recipe </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s3">&quot;Recipe is required&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">type </span><span class="s2">== </span><span class="s1">RequestType</span><span class="s2">.</span><span class="s1">DELETE </span><span class="s2">&amp;&amp; </span><span class="s1">recipeId </span><span class="s2">&lt;= </span><span class="s4">0</span><span class="s2">) {</span>
+            <span class="s0">throw new </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s3">&quot;Invalid recipe ID&quot;</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">type </span><span class="s2">= </span><span class="s1">type</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">recipeId </span><span class="s2">= </span><span class="s1">recipeId</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">recipe </span><span class="s2">= </span><span class="s1">recipe</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">requester </span><span class="s2">= </span><span class="s1">requester</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public </span><span class="s1">RequestType getType</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">type</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public int </span><span class="s1">getRecipeId</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">recipeId</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public <a href="Recipe.java.html">Recipe</a> </span><span class="s1">getRecipe</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">recipe</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">public <a href="User.java.html">User</a> </span><span class="s1">getRequester</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">requester</span><span class="s2">;</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
